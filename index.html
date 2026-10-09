@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addi Tech High-Quality AI Image Studio</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; text-align: left; }
+        .container { max-width: 800px; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 25px rgba(0,0,0,0.1); margin: auto; }
+        h2 { color: #d946ef; text-align: center; margin-bottom: 5px; font-size: 28px; font-weight: bold; }
+        .sub-title { text-align: center; font-size: 13px; color: #64748b; margin-bottom: 30px; }
+        
+        label { display: block; margin-top: 15px; font-weight: bold; font-size: 13px; color: #334155; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; background: #fff; }
+        
+        .btn { background-color: #d946ef; color: white; border: none; padding: 14px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; text-align: center; margin-top: 20px; transition: 0.3s; }
+        .btn:hover { background-color: #c026d3; }
+
+        /* لوڈنگ اسپنر */
+        .loading { display: none; text-align: center; margin-top: 20px; font-size: 14px; color: #7c3aed; font-weight: bold; }
+
+        /* رزلٹ اور Addi Tech لوگو واٹر مارک */
+        .result-box { background: #fdf4ff; border: 2px dashed #d946ef; padding: 25px; border-radius: 10px; margin-top: 25px; text-align: center; display: none; }
+        .image-wrapper { position: relative; display: inline-block; max-width: 100%; margin-top: 15px; }
+        .generated-img { width: 100%; max-height: 600px; object-fit: contain; border-radius: 8px; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .watermark-logo { position: absolute; bottom: 15px; right: 15px; background: rgba(30, 41, 59, 0.9); color: #38bdf8; padding: 6px 14px; font-size: 12px; font-weight: bold; border-radius: 4px; letter-spacing: 1px; border: 1px solid #38bdf8; text-transform: uppercase; box-shadow: 0 2px 5px rgba(0,0,0,0.3); pointer-events: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Addi Tech AI High-Quality Studio</h2>
+    <div class="sub-title">✨ Generate 2K / 4K Ultra HD AI Images with "Addi Tech" Watermark Logo</div>
+
+    <label>Enter Image Idea / Description:</label>
+    <input type="text" id="aiPrompt" placeholder="Type what you want to create...">
+
+    <label>Select Image Style:</label>
+    <select id="aiStyle">
+        <option value="photorealistic, highly detailed, studio lighting, sharp focus">Photorealistic (حقیقی اور واضح)</option>
+        <option value="modern 3D pixar cartoon style, vibrant colors">3D Pixar Cartoon Style</option>
+        <option value="minimalist corporate vector art, clean look">Minimalist Vector Art</option>
+        <option value="cinematic dramatic lighting, cyber aesthetic, 8k">Cinematic & Cyber Aesthetic</option>
+    </select>
+
+    <label>Select Quality & Resolution:</label>
+    <select id="aiQuality">
+        <option value="hd">HD Quality (1080p Standard)</option>
+        <option value="2k" selected>2K Ultra HD (High Sharpness & Detail)</option>
+        <option value="4k">4K Cinematic Masterpiece (Maximum Clarity)</option>
+    </select>
+
+    <button class="btn" onclick="generateAIImage()">🚀 Generate High-Quality Image</button>
+
+    <div id="loadingText" class="loading">⏳ Generating high-resolution image, please wait a moment...</div>
+
+    <!-- تیار شدہ تصویر اور واٹر مارک شو ہونے کی جگہ -->
+    <div id="resultContainer" class="result-box">
+        <h3 style="margin-top: 0; color: #c026d3; font-size: 16px;">✨ High-Resolution Image with "Addi Tech" Logo</h3>
+        <div class="image-wrapper">
+            <img id="outputAiImg" class="generated-img" alt="Generated AI Image">
+            <div class="watermark-logo">Addi Tech</div>
+        </div>
+        <br>
+        <a id="downloadBtn" class="btn" style="background-color: #059669; width: auto; display: inline-block; padding: 10px 25px; margin-top: 15px; text-decoration: none;" href="#" download="additech-hq-image.jpg">📥 Download HD/4K Image</a>
+    </div>
+
+    <div style="text-align: center; font-size: 11px; margin-top: 30px; color: #64748b;">
+        &copy; 2026 Addi Tech AI Studio. All Rights Reserved.
+    </div>
+</div>
+
+<script>
+    function generateAIImage() {
+        const promptInput = document.getElementById('aiPrompt').value.trim();
+        const styleSelect = document.getElementById('aiStyle').value;
+        const qualitySelect = document.getElementById('aiQuality').value;
+
+        if(!promptInput) {
+            alert('Please enter an image description first!');
+            return;
+        }
+
+        const loadingDiv = document.getElementById('loadingText');
+        const resultContainer = document.getElementById('resultContainer');
+        const outputImg = document.getElementById('outputAiImg');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        loadingDiv.style.display = 'block';
+        resultContainer.style.display = 'none';
+
+        // کوالٹی کے لحاظ سے پکسلز اور پرامپٹ کی سیٹنگ
+        let width = 1280;
+        let height = 1280;
+        let qualityTag = "high resolution, sharp details";
+
+        if(qualitySelect === '2k') {
+            width = 1920;
+            height = 1920;
+            qualityTag = "2K resolution, ultra-sharp focus, highly intricate details";
+        } else if(qualitySelect === '4k') {
+            width = 2560;
+            height = 2560;
+            qualityTag = "4K cinematic masterclass, hyper-realistic, extreme detail enhancement";
+        }
+
+        const fullPrompt = encodeURIComponent(`${promptInput}, ${styleSelect}, ${qualityTag}`);
+        const imageUrl = `https://image.pollinations.ai/prompt/${fullPrompt}?width=${width}&height=${height}&nologo=true`;
+
+        const tempImg = new Image();
+        tempImg.src = imageUrl;
+        tempImg.onload = function() {
+            outputImg.src = imageUrl;
+            downloadBtn.href = imageUrl;
+            loadingDiv.style.display = 'none';
+            resultContainer.style.display = 'block';
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        };
+        tempImg.onerror = function() {
+            loadingDiv.style.display = 'none';
+            alert('Failed to generate high-quality image. Please try again.');
+        };
+    }
+</script>
+
+</body>
+</html>
